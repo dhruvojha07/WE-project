@@ -7,7 +7,7 @@ const IconText = ({iconName, displayText, active }) => {
             <Icon 
                 icon={iconName} 
                 color={active? "white" : "gray"} 
-                fontSize={35}/>
+                fontSize={27}/>
         </div>
         <div className={`${active? "text-white" : "text-gray-400"} text-sm font-semibold hover:text-white`}>
             {displayText}

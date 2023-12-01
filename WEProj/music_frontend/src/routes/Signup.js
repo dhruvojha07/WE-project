@@ -1,9 +1,37 @@
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import TextInput from '../components/shared/Textinput';
 import PasswordInput from '../components/shared/PasswordInput';
 import { Link } from 'react-router-dom';
+import { makeunauthenticatedPOSTRequest } from '../utils/serverHelpers';
 
 const SignupComponent = () => {
+  const [email, setEmail] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+
+  const signUp = async () => {
+    if( email !== confirmEmail){
+      alert("Email and Confirm email fields must match");
+      return;
+    }
+    const data = {email, password, username, firstName,lastName};
+    const response = await makeunauthenticatedPOSTRequest("/auth/register", data);
+
+    if (response && !response.err){
+      console.log(response)
+      alert("Success!")
+    }
+    else{
+      alert("Failure :(");
+    }
+  }
+
+
     return <div className="w-full h-full flex flex-col items-center">
         <div className="Icon p-4 border-b border-solid border-gray-200 w-full flex justify-center">
           <Icon icon="logos:spotify" width="165" />
@@ -17,23 +45,57 @@ const SignupComponent = () => {
               label="Email address"
               placeholder="Enter your email address"
               className="my-6"
+              value={email}
+              setValue={setEmail}
             />
             <TextInput 
               label="Confirm Email address"
               placeholder="Please enter your email address again"
               className="mb-6"
+              value={confirmEmail}
+              setValue={setConfirmEmail}
+            />
+            <TextInput 
+              label="Username"
+              placeholder="Please enter your username"
+              className="mb-6"
+              value={username}
+              setValue={setUsername}
             />
             <PasswordInput
               label="Create Password"
               placeholder="Enter a strong password."
+              value={password}
+              setValue={setPassword}
             />
-            <TextInput 
-              label="What should we call you?"
-              placeholder="Enter a profile name"
-              className="my-6"
-            />
+            <div className="w-full flex justify-between item-center space-x-8">
+              <TextInput 
+                label="First Name"
+                placeholder="Enter your first name"
+                className="my-6"
+                value={firstName}
+                setValue={setFirstName}
+              />
+              <TextInput 
+                label="Last Name"
+                placeholder="Enter your last name"
+                className="my-6"
+                value={lastName}
+                setValue={setLastName}
+              />
+            
+              
+            </div>
+
             <div className="w-full flex items-center justify-center my-8">
-              <button className="bg-green-400 font-semibold p-3 px-10 rounded-full">SIGN UP</button>
+              <button 
+                className="bg-green-400 font-semibold p-3 px-10 rounded-full"
+                onClick={ (e) => {
+                  e.preventDefault();
+                  signUp();            
+                }}
+              >
+                SIGN UP</button>
             </div>
             <div className="w-full border border-solid border-gray-300"></div>
             <div className="my-6 font-semibold text-lg">
