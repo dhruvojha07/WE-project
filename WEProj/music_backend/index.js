@@ -12,10 +12,13 @@ const authRoutes = require("./routes/auth");
 const songRoutes = require("./routes/songR");
 const playlistRoutes = require("./routes/playlistR");
 
+const cors = require ("cors");
+
 require ("dotenv").config();
 
 const port = 8080;
 
+app.use(cors());
 app.use(express.json());
 //mongoDB connection
 mongoose.connect(
@@ -41,7 +44,7 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = "bigSecret";
 passport.use(
     new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
+    User.findOne({id: jwt_payload.identifier}, function(err, user) {
         if (err) {
             return done(err, false);
         }

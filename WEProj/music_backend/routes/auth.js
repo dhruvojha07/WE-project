@@ -18,7 +18,7 @@ router.post("/register", async (req, res) =>{
 
     // If user not found, create a new user
     // NEVER STORE PASSWORD IN PLAIN TEXT (MOST BASIC SECURITY MEASURE) textpass => hash
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUserData = {
         email, 
         password: hashedPassword, 

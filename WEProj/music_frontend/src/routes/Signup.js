@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { Icon } from '@iconify/react';
 import TextInput from '../components/shared/Textinput';
 import PasswordInput from '../components/shared/PasswordInput';
-import { Link } from 'react-router-dom';
-import { makeunauthenticatedPOSTRequest } from '../utils/serverHelpers';
+import { Link, useNavigate } from 'react-router-dom';
+import { makeUnauthenticatedPOSTRequest } from '../utils/serverHelpers';
 
 const SignupComponent = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,8 @@ const SignupComponent = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
+  const navigate = useNavigate();
+  const [cookie, setCookie] = useCookies(["token"]);
 
   const signUp = async () => {
     if( email !== confirmEmail){
@@ -20,11 +22,16 @@ const SignupComponent = () => {
       return;
     }
     const data = {email, password, username, firstName,lastName};
-    const response = await makeunauthenticatedPOSTRequest("/auth/register", data);
+    const response = await makeUnauthenticatedPOSTRequest("/auth/register", data);
 
     if (response && !response.err){
-      console.log(response)
+      console.log(response);
+      const token = response.token;
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+      setCookie("token", token, {path:"/", expires: date});
       alert("Success!")
+      navigate("/home"); 
     }
     else{
       alert("Failure :(");
