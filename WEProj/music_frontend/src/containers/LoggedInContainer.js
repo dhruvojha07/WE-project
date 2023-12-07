@@ -8,9 +8,13 @@ import { useContext } from "react";
 import songContext from "../contexts/songContext";
 import { useLayoutEffect } from "react";
 import { useRef } from "react";
+import CreatePlaylistModal from "../modals/CreatePlaylistModal";
+import AddToPlaylistModal from "../modals/AddToPlaylistModal";
+import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 
 const LoggedInContainer = ({children, curActiveScreen}) => {
-    
+    const [createPlaylistModalOpen, setcreatePlaylistModalOpen] = useState(false);
+    const [addToPlaylistModalOpen, setaddToPlaylistModalOpen] = useState(false);
 
     const {currentSong, setCurrentSong, soundPlayed, setSoundPlayed , isPaused ,setisPaused} = useContext(songContext);
 
@@ -27,6 +31,16 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
         }
         changeSong(currentSong.track);
     }, [currentSong && currentSong.track ]);
+
+    const addSongToPlaylist = async (playlistId) => {
+        const songId = currentSong._id
+        const payload = {playlistId, songId}
+        const response = await makeAuthenticatedPOSTRequest("/playlist/add/song", payload);
+        console.log(response);
+        if(response._id){
+            setaddToPlaylistModalOpen(false);
+        }
+    };
 
     const playSound = () => {
         if(!soundPlayed) {
@@ -68,6 +82,8 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
 
     return (
         <div className="h-full w-full bg-app-black">
+            {createPlaylistModalOpen && <CreatePlaylistModal closeModal ={() => {setcreatePlaylistModalOpen(false);}}/>}
+            {addToPlaylistModalOpen && <AddToPlaylistModal closeModal ={() => {setaddToPlaylistModalOpen(false);}} addSongToPlaylist={addSongToPlaylist}/>}
             <div className={`${currentSong ? "h-9/10" : "h-full"} w-full flex`}>
             {/*Left Panel */}
             <div className="h-full w-1/5 bg-black flex flex-col justify-between pb-10">
@@ -84,11 +100,13 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
                     <IconText 
                         iconName={"material-symbols:search-rounded"} 
                         displayText={"Search"}
-                        active = {curActiveScreen === "search"}/>
+                        active = {curActiveScreen === "search"}
+                        targetLink={"/search"}/>
                     <IconText 
                         iconName={"icomoon-free:books"} 
                         displayText={"Library"}
-                        active = {curActiveScreen === "library"}/>
+                        active = {curActiveScreen === "library"}
+                        targetLink={"/library"}/>
                     <IconText 
                         iconName={"material-symbols:library-music-sharp"} 
                         displayText={"My Music"}
@@ -98,7 +116,8 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
                 <div className="pt-5">
                     <IconText 
                         iconName={"material-symbols:add-box"} 
-                        displayText={"Create Playlist"}/> 
+                        displayText={"Create Playlist"}
+                        onClick={()=>{setcreatePlaylistModalOpen(true);}}/> 
 
                     <IconText 
                         iconName={"mdi:cards-heart"} 
@@ -128,7 +147,7 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
                         <div className="w-1/3 flex justify-around h-full items-center">
                             <TextWithHover displayText={"Upload Song"}/>
                             <div className="bg-white h-10 w-10 px-2 flex items-center justify-center rounded-full font-semibold cursor-pointer">
-                                XD
+                                BH
                             </div>
                         </div>
                     </div>
@@ -172,7 +191,16 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
                     </div>
 
                 </div>
-                <div className="w-1/4 flex justify-end"></div>               
+                <div className="w-1/4 flex justify-end pr-4 space-x-4 items-center">
+                    <Icon 
+                        icon="material-symbols:playlist-add" 
+                        fontSize={30} 
+                        className="cursor-pointer text-gray-400 hover:text-white"
+                        onClick={()=> {
+                            setaddToPlaylistModalOpen(true);
+                        }}/>
+                    <Icon icon="mdi:heart" fontSize={30} className="cursor-pointer text-gray-400 hover:text-white"/>
+                </div>               
             </div>
         )}
 

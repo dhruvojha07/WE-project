@@ -20,7 +20,7 @@ router.post("/create", passport.authenticate("jwt", {session: false}), async (re
 //Get all songs i have published.
 router.get("/get/mysongs", passport.authenticate("jwt", {session: false}), async (req, res) => {
     
-    const songs = await Song.find({artist: req.user._id});
+    const songs = await Song.find({artist: req.user._id}).populate("artist");
     return res.status(200).json({data: songs});
 
 });
@@ -38,7 +38,7 @@ router.get("/get/artist/:artistId", passport.authenticate("jwt", {session: false
 router.get("/get/songname/:songName", passport.authenticate("jwt", {session: false}), async (req, res) =>{
     const {songName} = req.params;
     
-    const songs = await Song.find({name: songName});
+    const songs = await Song.find({name: songName}).populate("artist");
     return res.status(200).json({data: songs});
 });
 

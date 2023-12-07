@@ -7,7 +7,7 @@ const HitsCardsData = [
     {
         title:"Mega Hit Mix",
         description:"A mega mix of 75 favorites from the last few years!",
-        imgUrl:"https://pbs.twimg.com/media/FxIEZ9xWIAApLlY.jpg"
+        imgUrl:"https://i.scdn.co/image/ab67706f000000028aa213d23c60645e2649a350"
     }, 
     {
         title:"Today's Top Hits" ,

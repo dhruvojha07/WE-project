@@ -13,9 +13,10 @@ const  MyMusic = () => {
         const getData = async () => {
             const response = await makeAuthenticatedGETRequest("/song/get/mysongs");
             setSongData(response.data);
-            
+            console.log(response.data);
         };
         getData();
+        
     }, []);
     
     return (

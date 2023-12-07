@@ -5,10 +5,13 @@ import SignupComponent from './routes/Signup';
 import HomeComponent from './routes/Home';
 import LoggedInHomeComponent from './routes/LoggedInHome';
 import UploadSong from './routes/UploadSong';
+import SearchPage from './routes/SearchPage';
 import MyMusic from './routes/MyMusic';
 import { useCookies } from 'react-cookie';
 import songContext from './contexts/songContext';
 import { useState } from 'react';
+import Library from './routes/Library';
+import SinglePlaylistView from './routes/SinglePlaylistView';
 
 function App() {
   const [currentSong, setCurrentSong] = useState(null)
@@ -27,6 +30,9 @@ function App() {
               <Route path ="/home" element={<LoggedInHomeComponent />}/>
               <Route path ="/uploadsong" element={<UploadSong/>}/>
               <Route path ="/myMusic" element={<MyMusic/>}/>
+              <Route path ="/search" element={<SearchPage/>}/>
+              <Route path ="/library" element={<Library/>}/>
+              <Route path ="/playlist/:playlistId" element={<SinglePlaylistView/>}/>
               <Route path= "*" element={<Navigate to="/home"/> }/>              
             </Routes>
             </songContext.Provider>
